@@ -1,0 +1,12 @@
+body {
+    text-align: center;
+    margin: 0;
+}
+
+header {
+    padding: 30px 0;
+    font-family: sans-serif;
+    font-size: 1.2em;
+    color: aqua;
+    background: linear-gradient(orange, red);
+}
