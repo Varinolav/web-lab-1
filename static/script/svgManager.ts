@@ -24,4 +24,33 @@ export default class SvgManager {
         point.attr('cy', "" + coordinateY);
         point.attr('visibility', 'visible');
     }
+
+    public intializeSvgClick(): void {
+        $("svg").on("click", (event): void => {
+            if (!this.dataManager.r) {
+                alert("Сначала выберите значение R");
+                return;
+            }
+
+            const svg = event.currentTarget;
+            const rect = svg.getBoundingClientRect();
+            const svgX = event.clientX - rect.left;
+            const svgY = event.clientY - rect.top;
+
+            const svgCenterX = 250;
+            const svgCenterY = 250;
+            const scale = 100;
+
+            const mathX: number = (svgX - svgCenterX) / scale * parseFloat(this.dataManager.r);
+            const mathY: number = (svgCenterY - svgY) / scale * parseFloat(this.dataManager.r);
+
+            const roundedX: number = Math.round(mathX * 10) / 10;
+            const roundedY: number = Math.round(mathY * 10) / 10;
+
+            this.dataManager.x = roundedX.toString();
+            this.dataManager.y = roundedY.toString();
+
+            this.drawPoint();
+        });
+    }
 }

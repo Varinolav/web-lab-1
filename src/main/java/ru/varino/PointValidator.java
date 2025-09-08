@@ -1,13 +1,14 @@
 package ru.varino;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 
 public class PointValidator {
     private final HashMap<String, String> values;
-    private float x;
+    private BigDecimal x;
     private BigDecimal y;
-    private float r;
+    private BigDecimal r;
 
     public PointValidator(HashMap<String, String> values) {
         this.values = values;
@@ -15,9 +16,9 @@ public class PointValidator {
 
     public boolean validate() {
         try {
-            x = Float.parseFloat(values.get("x"));
+            x = BigDecimal.valueOf(Float.parseFloat(values.get("x")));
             y = BigDecimal.valueOf(Double.parseDouble(values.get("y")));
-            r = Float.parseFloat(values.get("r"));
+            r = BigDecimal.valueOf(Float.parseFloat(values.get("r")));
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -29,22 +30,22 @@ public class PointValidator {
     }
 
     private boolean firstQuarter() {
-        if (x >= 0 && y.compareTo(BigDecimal.ZERO) >= 0) {
-            return BigDecimal.valueOf(x).pow(2).add(y.pow(2)).compareTo(BigDecimal.valueOf(r).pow(2)) <= 0;
+        if (x.compareTo(BigDecimal.ZERO) >= 0 && y.compareTo(BigDecimal.ZERO) >= 0) {
+            return x.pow(2).add(y.pow(2)).compareTo(r.pow(2)) <= 0;
         }
         return false;
     }
 
     private boolean thirdQuarter() {
-        if (x <= 0 && y.compareTo(BigDecimal.ZERO) <= 0) {
-            return BigDecimal.valueOf(x).add(y).abs().compareTo(BigDecimal.valueOf(r).abs()) <= 0;
+        if (x.compareTo(BigDecimal.ZERO) <= 0 && y.compareTo(BigDecimal.ZERO) <= 0) {
+            return x.add(y).abs().compareTo(r.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP).abs()) <= 0;
         }
         return false;
     }
 
     private boolean fourthQuarter() {
-        if (x >= 0 && y.compareTo(BigDecimal.ZERO) <= 0) {
-            return x < r && y.compareTo(BigDecimal.valueOf(-r)) > 0;
+        if (x.compareTo(BigDecimal.ZERO) >= 0 && y.compareTo(BigDecimal.ZERO) <= 0) {
+            return x.compareTo(r) <= 0 && y.compareTo(r.negate()) >= 0;
         }
         return false;
     }

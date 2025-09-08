@@ -24,6 +24,7 @@ var App = /** @class */ (function () {
         this.initializeTableButtons();
         this.initializeInputButtonsSelection();
         this.initializeServerRequesting();
+        this.svgManager.intializeSvgClick();
     };
     App.prototype.initializeInputButtons = function () {
         var _this = this;
@@ -51,18 +52,24 @@ var App = /** @class */ (function () {
     };
     App.prototype.initializeInputButtonsSelection = function () {
         var _this = this;
-        $(".input-btn").on("click", function (event) {
+        $("input[name=X-button]").on("click", function (event) {
+            console.log(222);
             if ($(event.target).hasClass("selected")) {
                 $(event.target).removeClass("selected");
-                if ($(event.target).attr("name") === "X-button") {
-                    _this.dataManager.x = null;
-                }
-                if ($(event.target).attr("name") === "R-button") {
-                    _this.dataManager.r = null;
-                }
+                _this.dataManager.x = null;
             }
             else {
-                $(".input-btn").removeClass("selected");
+                $("input[name=X-button]").removeClass("selected");
+                $(event.target).addClass("selected");
+            }
+        });
+        $("input[name=R-button]").on("click", function (event) {
+            if ($(event.target).hasClass("selected")) {
+                $(event.target).removeClass("selected");
+                _this.dataManager.r = null;
+            }
+            else {
+                $("input[name=R-button]").removeClass("selected");
                 $(event.target).addClass("selected");
             }
         });
@@ -76,7 +83,7 @@ var App = /** @class */ (function () {
             }
             var data = _this.dataManager.getData();
             $.ajax({
-                url: "/calculate?" + $.param(data),
+                url: _this.config.get("path") + $.param(data),
                 type: "POST",
                 dataType: "json",
                 success: function (response) {

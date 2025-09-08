@@ -12,15 +12,18 @@ var ResultTableManager = /** @class */ (function () {
         if (this.curPage < this.getTotalPages())
             this.curPage++;
         this.renderTable();
+        this.updatePaginationButtons();
     };
     ResultTableManager.prototype.clearTable = function () {
         this.allItems = [];
         this.renderTable();
+        this.updatePaginationButtons();
     };
     ResultTableManager.prototype.previousPage = function () {
         if (this.curPage > 1)
             this.curPage--;
         this.renderTable();
+        this.updatePaginationButtons();
     };
     ResultTableManager.prototype.getTotalPages = function () {
         return Math.ceil(this.allItems.length / this.pageSize);
@@ -29,6 +32,7 @@ var ResultTableManager = /** @class */ (function () {
         this.allItems.push(data);
         this.curPage = this.getTotalPages();
         this.renderTable();
+        this.updatePaginationButtons();
     };
     ResultTableManager.prototype.getCurrentPageData = function () {
         var startIndex = (this.curPage - 1) * this.pageSize;
@@ -36,13 +40,11 @@ var ResultTableManager = /** @class */ (function () {
         return this.allItems.slice(startIndex, endIndex);
     };
     ResultTableManager.prototype.renderTable = function () {
-        var _this = this;
-        var headerRow = this.table.rows[0];
-        this.table.innerHTML = '';
-        this.table.appendChild(headerRow);
+        var tbody = this.table.querySelector('#result-tbody');
+        tbody.innerHTML = '';
         var currentData = this.getCurrentPageData();
         currentData.forEach(function (item) {
-            var row = _this.table.insertRow();
+            var row = tbody.insertRow();
             row.insertCell(0).textContent = item.x;
             row.insertCell(1).textContent = item.y;
             row.insertCell(2).textContent = item.r;
@@ -50,6 +52,36 @@ var ResultTableManager = /** @class */ (function () {
             row.insertCell(4).textContent = item.now;
             row.insertCell(5).textContent = item.time;
         });
+    };
+    ResultTableManager.prototype.updatePaginationButtons = function () {
+        var totalPages = this.getTotalPages();
+        var prevBtn = $("#prev-btn");
+        var nextBtn = $("#next-btn");
+        var clearBtn = $("#clear-btn");
+        if (this.curPage <= 1 || totalPages === 0) {
+            prevBtn.prop('disabled', true);
+            prevBtn.addClass("disabled");
+        }
+        else {
+            prevBtn.prop('disabled', false);
+            prevBtn.removeClass("disabled");
+        }
+        if (this.curPage >= totalPages || totalPages === 0) {
+            nextBtn.prop('disabled', true);
+            nextBtn.addClass("disabled");
+        }
+        else {
+            nextBtn.prop('disabled', false);
+            nextBtn.removeClass("disabled");
+        }
+        if (this.allItems.length === 0) {
+            clearBtn.prop("disabled", true);
+            clearBtn.addClass("disabled");
+        }
+        else {
+            clearBtn.prop("disabled", false);
+            clearBtn.removeClass("disabled");
+        }
     };
     return ResultTableManager;
 }());
@@ -82,6 +114,7 @@ var App = /** @class */ (function () {
         this.initializeTableButtons();
         this.initializeInputButtonsSelection();
         this.initializeServerRequesting();
+        this.svgManager.intializeSvgClick();
     };
     App.prototype.initializeInputButtons = function () {
         var _this = this;
@@ -109,18 +142,24 @@ var App = /** @class */ (function () {
     };
     App.prototype.initializeInputButtonsSelection = function () {
         var _this = this;
-        $(".input-btn").on("click", function (event) {
+        $("input[name=X-button]").on("click", function (event) {
+            console.log(222);
             if ($(event.target).hasClass("selected")) {
                 $(event.target).removeClass("selected");
-                if ($(event.target).attr("name") === "X-button") {
-                    _this.dataManager.x = null;
-                }
-                if ($(event.target).attr("name") === "R-button") {
-                    _this.dataManager.r = null;
-                }
+                _this.dataManager.x = null;
             }
             else {
-                $(".input-btn").removeClass("selected");
+                $("input[name=X-button]").removeClass("selected");
+                $(event.target).addClass("selected");
+            }
+        });
+        $("input[name=R-button]").on("click", function (event) {
+            if ($(event.target).hasClass("selected")) {
+                $(event.target).removeClass("selected");
+                _this.dataManager.r = null;
+            }
+            else {
+                $("input[name=R-button]").removeClass("selected");
                 $(event.target).addClass("selected");
             }
         });
@@ -134,7 +173,7 @@ var App = /** @class */ (function () {
             }
             var data = _this.dataManager.getData();
             $.ajax({
-                url: "/calculate?" + $.param(data),
+                url: _this.config.get("path") + $.param(data),
                 type: "POST",
                 dataType: "json",
                 success: function (response) {
@@ -253,6 +292,29 @@ var SvgManager = /** @class */ (function () {
         point.attr('cx', "" + coordinateX);
         point.attr('cy', "" + coordinateY);
         point.attr('visibility', 'visible');
+    };
+    SvgManager.prototype.intializeSvgClick = function () {
+        var _this = this;
+        $("svg").on("click", function (event) {
+            if (!_this.dataManager.r) {
+                alert("Сначала выберите значение R");
+                return;
+            }
+            var svg = event.currentTarget;
+            var rect = svg.getBoundingClientRect();
+            var svgX = event.clientX - rect.left;
+            var svgY = event.clientY - rect.top;
+            var svgCenterX = 250;
+            var svgCenterY = 250;
+            var scale = 100;
+            var mathX = (svgX - svgCenterX) / scale * parseFloat(_this.dataManager.r);
+            var mathY = (svgCenterY - svgY) / scale * parseFloat(_this.dataManager.r);
+            var roundedX = Math.round(mathX * 10) / 10;
+            var roundedY = Math.round(mathY * 10) / 10;
+            _this.dataManager.x = roundedX.toString();
+            _this.dataManager.y = roundedY.toString();
+            _this.drawPoint();
+        });
     };
     return SvgManager;
 }());

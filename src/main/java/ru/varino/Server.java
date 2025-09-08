@@ -4,6 +4,7 @@ import com.fastcgi.FCGIInterface;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
@@ -39,7 +40,7 @@ public class Server {
         if (validator.validate()) {
             long endTime = System.nanoTime();
             long elapsedTime = (endTime - startTime) / 1000;
-            String formattedTimeNow = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(LocalDateTime.now());
+            String formattedTimeNow = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(LocalDateTime.now().atZone(ZoneId.of("Europe/Moscow")));
             response = createJson(String.format("{\"result\": %b, \"time\": %d, \"now\": \"%s\"}", validator.isHit(), elapsedTime, formattedTimeNow));
         } else {
             response = createJson("{\"error\": \" incorrect data\"}");

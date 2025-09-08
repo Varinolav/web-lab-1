@@ -23,6 +23,7 @@ export default class App {
         this.initializeTableButtons();
         this.initializeInputButtonsSelection();
         this.initializeServerRequesting();
+        this.svgManager.intializeSvgClick();
     }
 
     private initializeInputButtons() {
@@ -52,17 +53,22 @@ export default class App {
     }
 
     private initializeInputButtonsSelection() {
-        $(".input-btn").on("click", (event): void => {
+        $("input[name=X-button]").on("click", (event): void => {
+            console.log(222)
             if ($(event.target).hasClass("selected")) {
                 $(event.target).removeClass("selected");
-                if ($(event.target).attr("name") === "X-button") {
-                    this.dataManager.x = null;
-                }
-                if ($(event.target).attr("name") === "R-button") {
-                    this.dataManager.r = null;
-                }
+                this.dataManager.x = null;
             } else {
-                $(".input-btn").removeClass("selected");
+                $("input[name=X-button]").removeClass("selected");
+                $(event.target).addClass("selected");
+            }
+        });
+        $("input[name=R-button]").on("click", (event): void => {
+            if ($(event.target).hasClass("selected")) {
+                $(event.target).removeClass("selected");
+                this.dataManager.r = null;
+            } else {
+                $("input[name=R-button]").removeClass("selected");
                 $(event.target).addClass("selected");
             }
         });
@@ -77,7 +83,7 @@ export default class App {
 
             let data = this.dataManager.getData();
             $.ajax({
-                url: "/calculate?" + $.param(data),
+                url: this.config.get("path") + $.param(data),
                 type: "POST",
                 dataType: "json",
                 success: (response): void => {
