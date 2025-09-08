@@ -9,14 +9,12 @@
 </head>
 <body>
 <table class="main-frame">
-    <tr>
+    <tr id="header">
         <th colspan="2">Лабораторная работа №1 Вариант: 466985<br>Павленко Иван Дмитриевич P3217</th>
     </tr>
     <tr>
         <td class="right-block">
             <svg width="600" height="500" xmlns="http://www.w3.org/2000/svg">
-                <circle id="pointer" r="5" cx="150" cy="150" fill-opacity="0.9" fill="red" stroke="firebrick"
-                        visibility="hidden"></circle>
                 <!-- Стрелки -->
                 <defs>
                     <marker id="arrowhead" markerWidth="10" markerHeight="7"
@@ -66,6 +64,9 @@
                 <line x1="245" y1="200" x2="255" y2="200" stroke="black" stroke-width="2"/>
                 <line x1="245" y1="300" x2="255" y2="300" stroke="black" stroke-width="2"/>
                 <line x1="245" y1="350" x2="255" y2="350" stroke="black" stroke-width="2"/>
+
+                <circle id="pointer" r="5" cx="150" cy="150" fill-opacity="0.9" fill="red" stroke="firebrick"
+                        visibility="hidden"></circle>
             </svg>
         </td>
         <td>
@@ -119,13 +120,25 @@
                     <th>Дата</th>
                     <th>Время</th>
                 </tr>
-                <tbody id="results-body">
-                </tbody>
             </table>
         </td>
     </tr>
     <tr>
-        <td colspan="2">пуки</td>
+        <td></td>
+        <td>
+            <table class="pagination-table">
+                <tr>
+                    <td>
+                        <input type="button" id="prev-btn" class="pagination-btn" value="Предыдущая">
+                        <input type="button" id="next-btn" class="pagination-btn" value="Следующая">
+                        <input type="button" id="clear-btn" class="pagination-btn" value="Очистить">
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
     </tr>
 </table>
 <script src="script.js"></script>

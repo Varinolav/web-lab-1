@@ -1,11 +1,10 @@
-html * {
-    font-family: sans-serif;
-}
+
 
 body {
     text-align: center;
     margin: 0;
     background: #FFEBAF;
+    font-family: sans-serif;
 }
 
 table {
@@ -16,7 +15,7 @@ table {
 
 table input {
     padding: 8px 15px;
-    margin: 2px;
+    margin: 0.7%;
     border: 2px solid #4C9DB0;
     background-color: #fff;
     color: #4C9DB0;
@@ -30,17 +29,26 @@ table input {
 table input:hover {
     background-color: #4C9DB0;
     color: white;
-
 }
+
 table input:hover::placeholder {
     color: white;
+}
 
+table input::placeholder {
+    color: #4C9DB0;
 }
 
 table input.selected {
     background-color: #4C9DB0;
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#header {
+    color: darkgreen;
+    font-family: sans-serif;
+    font-size: 17px
 }
 
 .right-block {
@@ -51,7 +59,6 @@ table input.selected {
 .result-table {
     border-collapse: collapse;
     width: 60%;
-    margin: 10px auto;
 }
 
 .result-table th,
@@ -63,23 +70,13 @@ table input.selected {
 
 }
 
-.result-table th {
-    font-weight: bold;
-}
-
-.result-table tbody tr:nth-child(even) {
-    background-color: rgba(255, 235, 175, 2);
-}
-
-.coord-input {
-    width: 200px;
-    padding: 10px 15px;
-    border: 2px solid #A8C89A;
-    border-radius: 15px;
+.result-table {
     font-size: 16px;
-    font-family: monospace;
-    background-color: rgba(76, 157, 176, 0.28);
-    text-align: center;
+}
+
+.result-table th {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .input-buttons {
