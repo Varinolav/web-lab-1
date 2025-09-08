@@ -141,20 +141,6 @@ $("input[name=check-button]").on("click", function (e: ClickEvent<HTMLElement>):
                 console.log(response)
             }
 
-            // const row: HTMLTableRowElement = table.insertRow(1);
-            // const rowX: HTMLTableCellElement = row.insertCell(0);
-            // const rowY: HTMLTableCellElement = row.insertCell(1);
-            // const rowR: HTMLTableCellElement = row.insertCell(2);
-            // const rowResult: HTMLTableCellElement = row.insertCell(3);
-            // const rowNow: HTMLTableCellElement = row.insertCell(4);
-            // const rowTime: HTMLTableCellElement = row.insertCell(5);
-            // let hitStatus: string = response.result ? "Да" : "Нет";
-            // rowResult.textContent = hitStatus;
-            // rowNow.textContent = response.now;
-            // rowTime.textContent = response.time;
-            // rowX.textContent = data.x;
-            // rowY.textContent = data.y;
-            // rowR.textContent = data.r;
             const rowData: object = {...data, hit: response.result, now: response.now, time: response.time};
             paginator.addData(rowData);
         },
