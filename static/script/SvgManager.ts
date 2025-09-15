@@ -24,7 +24,7 @@ export default class SvgManager {
         point.attr('visibility', 'visible');
     }
 
-    public intializeSvgClick(): void {
+    public initializeSvgClick(): void {
         $("svg").on("click", (event): void => {
             if (!this.dataManager.r) {
                 alert("Сначала выберите значение R");
@@ -43,11 +43,10 @@ export default class SvgManager {
             const mathX: number = (svgX - svgCenterX) / scale * parseFloat(this.dataManager.r);
             const mathY: number = (svgCenterY - svgY) / scale * parseFloat(this.dataManager.r);
 
-            const roundedX: number = Math.round(mathX * 10) / 10;
-            const roundedY: number = Math.round(mathY * 10) / 10;
 
-            this.dataManager.x = roundedX.toString();
-            this.dataManager.y = roundedY.toString();
+
+            this.dataManager.x = mathX.toString();
+            this.dataManager.y = mathY.toString();
 
             this.drawPoint();
         });

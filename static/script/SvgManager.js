@@ -17,7 +17,7 @@ var SvgManager = /** @class */ (function () {
         point.attr('cy', "" + coordinateY);
         point.attr('visibility', 'visible');
     };
-    SvgManager.prototype.intializeSvgClick = function () {
+    SvgManager.prototype.initializeSvgClick = function () {
         var _this = this;
         $("svg").on("click", function (event) {
             if (!_this.dataManager.r) {
@@ -33,10 +33,8 @@ var SvgManager = /** @class */ (function () {
             var scale = 100;
             var mathX = (svgX - svgCenterX) / scale * parseFloat(_this.dataManager.r);
             var mathY = (svgCenterY - svgY) / scale * parseFloat(_this.dataManager.r);
-            var roundedX = Math.round(mathX * 10) / 10;
-            var roundedY = Math.round(mathY * 10) / 10;
-            _this.dataManager.x = roundedX.toString();
-            _this.dataManager.y = roundedY.toString();
+            _this.dataManager.x = mathX.toString();
+            _this.dataManager.y = mathY.toString();
             _this.drawPoint();
         });
     };

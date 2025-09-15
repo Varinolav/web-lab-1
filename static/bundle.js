@@ -112,6 +112,51 @@ exports.default = ResultTableManager;
 
 },{}],2:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var SvgManager = /** @class */ (function () {
+    function SvgManager(dataManager) {
+        this.dataManager = dataManager;
+    }
+    SvgManager.prototype.drawPoint = function () {
+        if (!this.dataManager.isValid()) {
+            return;
+        }
+        var svgCenterX = 250;
+        var svgCenterY = 250;
+        var coordinateX = svgCenterX + parseFloat(this.dataManager.x) / parseFloat(this.dataManager.r) * 100;
+        var coordinateY = svgCenterY - parseFloat(this.dataManager.y) / parseFloat(this.dataManager.r) * 100;
+        var point = $("#pointer");
+        point.attr('cx', "" + coordinateX);
+        point.attr('cy', "" + coordinateY);
+        point.attr('visibility', 'visible');
+    };
+    SvgManager.prototype.initializeSvgClick = function () {
+        var _this = this;
+        $("svg").on("click", function (event) {
+            if (!_this.dataManager.r) {
+                alert("Сначала выберите значение R");
+                return;
+            }
+            var svg = event.currentTarget;
+            var rect = svg.getBoundingClientRect();
+            var svgX = event.clientX - rect.left;
+            var svgY = event.clientY - rect.top;
+            var svgCenterX = 250;
+            var svgCenterY = 250;
+            var scale = 100;
+            var mathX = (svgX - svgCenterX) / scale * parseFloat(_this.dataManager.r);
+            var mathY = (svgCenterY - svgY) / scale * parseFloat(_this.dataManager.r);
+            _this.dataManager.x = mathX.toString();
+            _this.dataManager.y = mathY.toString();
+            _this.drawPoint();
+        });
+    };
+    return SvgManager;
+}());
+exports.default = SvgManager;
+
+},{}],3:[function(require,module,exports){
+"use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -137,7 +182,7 @@ var App = /** @class */ (function () {
         this.initializeTableButtons();
         this.initializeInputButtonsSelection();
         this.initializeServerRequesting();
-        this.svgManager.intializeSvgClick();
+        this.svgManager.initializeSvgClick();
     };
     App.prototype.initializeInputButtons = function () {
         var _this = this;
@@ -214,7 +259,7 @@ var App = /** @class */ (function () {
 }());
 exports.default = App;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Config = /** @class */ (function () {
@@ -232,7 +277,7 @@ var Config = /** @class */ (function () {
 }());
 exports.default = Config;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var DataManager = /** @class */ (function () {
@@ -278,68 +323,21 @@ var DataManager = /** @class */ (function () {
 }());
 exports.default = DataManager;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var app_1 = require("./app");
 var config_1 = require("./config");
 var dataManager_1 = require("./dataManager");
 var ResultTableManager_1 = require("./ResultTableManager");
-var svgManager_1 = require("./svgManager");
+var SvgManager_1 = require("./SvgManager");
 var config = new config_1.default();
 config.set("path", "/calculate?");
 // config.set("path", "/fcgi-bin/app.jar?"); // helios
 var dataManager = new dataManager_1.default();
 var table = document.getElementById("result-table");
 var tableManager = new ResultTableManager_1.default(table);
-var svgManager = new svgManager_1.default(dataManager);
+var svgManager = new SvgManager_1.default(dataManager);
 new app_1.default(config, tableManager, dataManager, svgManager).initializeListeners();
 
-},{"./ResultTableManager":1,"./app":2,"./config":3,"./dataManager":4,"./svgManager":6}],6:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var SvgManager = /** @class */ (function () {
-    function SvgManager(dataManager) {
-        this.dataManager = dataManager;
-    }
-    SvgManager.prototype.drawPoint = function () {
-        if (!this.dataManager.isValid()) {
-            return;
-        }
-        var svgCenterX = 250;
-        var svgCenterY = 250;
-        var coordinateX = svgCenterX + parseFloat(this.dataManager.x) / parseFloat(this.dataManager.r) * 100;
-        var coordinateY = svgCenterY - parseFloat(this.dataManager.y) / parseFloat(this.dataManager.r) * 100;
-        var point = $("#pointer");
-        point.attr('cx', "" + coordinateX);
-        point.attr('cy', "" + coordinateY);
-        point.attr('visibility', 'visible');
-    };
-    SvgManager.prototype.intializeSvgClick = function () {
-        var _this = this;
-        $("svg").on("click", function (event) {
-            if (!_this.dataManager.r) {
-                alert("Сначала выберите значение R");
-                return;
-            }
-            var svg = event.currentTarget;
-            var rect = svg.getBoundingClientRect();
-            var svgX = event.clientX - rect.left;
-            var svgY = event.clientY - rect.top;
-            var svgCenterX = 250;
-            var svgCenterY = 250;
-            var scale = 100;
-            var mathX = (svgX - svgCenterX) / scale * parseFloat(_this.dataManager.r);
-            var mathY = (svgCenterY - svgY) / scale * parseFloat(_this.dataManager.r);
-            var roundedX = Math.round(mathX * 10) / 10;
-            var roundedY = Math.round(mathY * 10) / 10;
-            _this.dataManager.x = roundedX.toString();
-            _this.dataManager.y = roundedY.toString();
-            _this.drawPoint();
-        });
-    };
-    return SvgManager;
-}());
-exports.default = SvgManager;
-
-},{}]},{},[5]);
+},{"./ResultTableManager":1,"./SvgManager":2,"./app":3,"./config":4,"./dataManager":5}]},{},[6]);

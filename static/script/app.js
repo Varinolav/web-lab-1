@@ -24,7 +24,7 @@ var App = /** @class */ (function () {
         this.initializeTableButtons();
         this.initializeInputButtonsSelection();
         this.initializeServerRequesting();
-        this.svgManager.intializeSvgClick();
+        this.svgManager.initializeSvgClick();
     };
     App.prototype.initializeInputButtons = function () {
         var _this = this;

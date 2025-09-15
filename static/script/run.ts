@@ -2,7 +2,7 @@ import App from "./app";
 import Config from "./config";
 import DataManager from "./dataManager";
 import ResultTableManager from "./ResultTableManager";
-import SvgManager from "./svgManager";
+import SvgManager from "./SvgManager";
 
 
 let config: Config = new Config();

@@ -1,16 +1,16 @@
 import Config from "./config";
 import ResultTableManager from "./ResultTableManager";
 import DataManager from "./dataManager";
-import svgManager from "./svgManager";
+import SvgManager from "./SvgManager";
 
 export default class App {
     private config: Config;
     private tableManager: ResultTableManager;
     private dataManager: DataManager;
-    private svgManager: svgManager;
+    private svgManager: SvgManager;
 
 
-    constructor(config: Config, tableManager: ResultTableManager, dataManager: DataManager, svgManager: svgManager) {
+    constructor(config: Config, tableManager: ResultTableManager, dataManager: DataManager, svgManager: SvgManager) {
         this.config = config;
         this.tableManager = tableManager;
         this.dataManager = dataManager;
@@ -23,7 +23,7 @@ export default class App {
         this.initializeTableButtons();
         this.initializeInputButtonsSelection();
         this.initializeServerRequesting();
-        this.svgManager.intializeSvgClick();
+        this.svgManager.initializeSvgClick();
     }
 
     private initializeInputButtons() {
