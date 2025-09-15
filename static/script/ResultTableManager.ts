@@ -3,10 +3,13 @@ export default class ResultTableManager {
     private curPage: number = 1;
     private allItems: any[];
     private table: HTMLTableElement;
+    private readonly storageKey: string = 'results';
+
 
     constructor(table: HTMLTableElement) {
         this.allItems = [];
         this.table = table;
+        this.loadFromStorage();
     }
 
     public nextPage(): void {
@@ -19,6 +22,7 @@ export default class ResultTableManager {
         this.allItems = [];
         this.renderTable();
         this.updatePaginationButtons();
+        this.saveToStorage();
     }
 
     public previousPage(): void {
@@ -36,6 +40,7 @@ export default class ResultTableManager {
         this.curPage = this.getTotalPages();
         this.renderTable();
         this.updatePaginationButtons();
+        this.saveToStorage();
     }
 
     private getCurrentPageData(): any[] {
@@ -44,11 +49,30 @@ export default class ResultTableManager {
         return this.allItems.slice(startIndex, endIndex);
     }
 
+    private saveToStorage(): void {
+        const data = {
+            items: this.allItems,
+        };
+        sessionStorage.setItem(this.storageKey, JSON.stringify(data));
+    }
+
+    private loadFromStorage(): void {
+        const data = sessionStorage.getItem(this.storageKey);
+        if (!data) return;
+        const parsedData = JSON.parse(data);
+        this.allItems = parsedData.items;
+        this.renderTable();
+        this.updatePaginationButtons();
+    }
+
     private renderTable(): void {
         const tbody = this.table.querySelector('#result-tbody') as HTMLTableSectionElement;
         tbody.innerHTML = '';
-
-        const currentData = this.getCurrentPageData();
+        const currentData = this.getCurrentPageData().sort((a, b) => {
+            const dateA = new Date(a.now);
+            const dateB = new Date(b.now);
+            return dateB.getTime() - dateA.getTime();
+        });
         currentData.forEach(item => {
             const row = tbody.insertRow();
             row.insertCell(0).textContent = item.x;

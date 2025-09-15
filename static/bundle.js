@@ -5,8 +5,10 @@ var ResultTableManager = /** @class */ (function () {
     function ResultTableManager(table) {
         this.pageSize = 5;
         this.curPage = 1;
+        this.storageKey = 'results';
         this.allItems = [];
         this.table = table;
+        this.loadFromStorage();
     }
     ResultTableManager.prototype.nextPage = function () {
         if (this.curPage < this.getTotalPages())
@@ -18,6 +20,7 @@ var ResultTableManager = /** @class */ (function () {
         this.allItems = [];
         this.renderTable();
         this.updatePaginationButtons();
+        this.saveToStorage();
     };
     ResultTableManager.prototype.previousPage = function () {
         if (this.curPage > 1)
@@ -33,16 +36,36 @@ var ResultTableManager = /** @class */ (function () {
         this.curPage = this.getTotalPages();
         this.renderTable();
         this.updatePaginationButtons();
+        this.saveToStorage();
     };
     ResultTableManager.prototype.getCurrentPageData = function () {
         var startIndex = (this.curPage - 1) * this.pageSize;
         var endIndex = startIndex + this.pageSize;
         return this.allItems.slice(startIndex, endIndex);
     };
+    ResultTableManager.prototype.saveToStorage = function () {
+        var data = {
+            items: this.allItems,
+        };
+        sessionStorage.setItem(this.storageKey, JSON.stringify(data));
+    };
+    ResultTableManager.prototype.loadFromStorage = function () {
+        var data = sessionStorage.getItem(this.storageKey);
+        if (!data)
+            return;
+        var parsedData = JSON.parse(data);
+        this.allItems = parsedData.items;
+        this.renderTable();
+        this.updatePaginationButtons();
+    };
     ResultTableManager.prototype.renderTable = function () {
         var tbody = this.table.querySelector('#result-tbody');
         tbody.innerHTML = '';
-        var currentData = this.getCurrentPageData();
+        var currentData = this.getCurrentPageData().sort(function (a, b) {
+            var dateA = new Date(a.now);
+            var dateB = new Date(b.now);
+            return dateB.getTime() - dateA.getTime();
+        });
         currentData.forEach(function (item) {
             var row = tbody.insertRow();
             row.insertCell(0).textContent = item.x;
@@ -143,7 +166,6 @@ var App = /** @class */ (function () {
     App.prototype.initializeInputButtonsSelection = function () {
         var _this = this;
         $("input[name=X-button]").on("click", function (event) {
-            console.log(222);
             if ($(event.target).hasClass("selected")) {
                 $(event.target).removeClass("selected");
                 _this.dataManager.x = null;
@@ -180,6 +202,7 @@ var App = /** @class */ (function () {
                     if (response.error != null) {
                         alert("Ответ не получен");
                         console.log(response);
+                        return;
                     }
                     var rowData = __assign(__assign({}, data), { hit: response.result, now: response.now, time: response.time });
                     _this.tableManager.addData(rowData);
@@ -287,7 +310,6 @@ var SvgManager = /** @class */ (function () {
         var svgCenterY = 250;
         var coordinateX = svgCenterX + parseFloat(this.dataManager.x) / parseFloat(this.dataManager.r) * 100;
         var coordinateY = svgCenterY - parseFloat(this.dataManager.y) / parseFloat(this.dataManager.r) * 100;
-        console.log(coordinateY, coordinateY);
         var point = $("#pointer");
         point.attr('cx', "" + coordinateX);
         point.attr('cy', "" + coordinateY);

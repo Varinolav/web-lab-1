@@ -18,7 +18,6 @@ export default class SvgManager {
 
         const coordinateX = svgCenterX + parseFloat(this.dataManager.x) / parseFloat(this.dataManager.r) * 100;
         const coordinateY = svgCenterY - parseFloat(this.dataManager.y) / parseFloat(this.dataManager.r) * 100;
-        console.log(coordinateY, coordinateY);
         let point = $("#pointer");
         point.attr('cx', "" + coordinateX);
         point.attr('cy', "" + coordinateY);

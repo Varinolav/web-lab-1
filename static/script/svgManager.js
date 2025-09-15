@@ -12,7 +12,6 @@ var SvgManager = /** @class */ (function () {
         var svgCenterY = 250;
         var coordinateX = svgCenterX + parseFloat(this.dataManager.x) / parseFloat(this.dataManager.r) * 100;
         var coordinateY = svgCenterY - parseFloat(this.dataManager.y) / parseFloat(this.dataManager.r) * 100;
-        console.log(coordinateY, coordinateY);
         var point = $("#pointer");
         point.attr('cx', "" + coordinateX);
         point.attr('cy', "" + coordinateY);

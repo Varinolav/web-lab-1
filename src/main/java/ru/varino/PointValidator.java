@@ -19,7 +19,10 @@ public class PointValidator {
             x = BigDecimal.valueOf(Float.parseFloat(values.get("x")));
             y = BigDecimal.valueOf(Double.parseDouble(values.get("y")));
             r = BigDecimal.valueOf(Float.parseFloat(values.get("r")));
-            return true;
+            boolean xValid = x.compareTo(BigDecimal.valueOf(-2)) >= 0 && x.compareTo(BigDecimal.valueOf(2)) <= 0;
+            boolean yValid = y.compareTo(BigDecimal.valueOf(-5)) >= 0 && y.compareTo(BigDecimal.valueOf(5)) <= 0;
+            boolean RValid = r.compareTo(BigDecimal.ZERO) >= 0 && r.compareTo(BigDecimal.valueOf(3)) <= 0;
+            return xValid && yValid && RValid;
         } catch (NumberFormatException e) {
             return false;
         }
