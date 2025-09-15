@@ -54,7 +54,7 @@ export default class App {
 
     private initializeInputButtonsSelection() {
         $("input[name=X-button]").on("click", (event): void => {
-            console.log(222)
+
             if ($(event.target).hasClass("selected")) {
                 $(event.target).removeClass("selected");
                 this.dataManager.x = null;
@@ -90,6 +90,7 @@ export default class App {
                     if (response.error != null) {
                         alert("Ответ не получен")
                         console.log(response)
+                        return;
                     }
                     const rowData: object = {...data, hit: response.result, now: response.now, time: response.time};
                     this.tableManager.addData(rowData);

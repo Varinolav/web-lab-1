@@ -53,7 +53,6 @@ var App = /** @class */ (function () {
     App.prototype.initializeInputButtonsSelection = function () {
         var _this = this;
         $("input[name=X-button]").on("click", function (event) {
-            console.log(222);
             if ($(event.target).hasClass("selected")) {
                 $(event.target).removeClass("selected");
                 _this.dataManager.x = null;
@@ -90,6 +89,7 @@ var App = /** @class */ (function () {
                     if (response.error != null) {
                         alert("Ответ не получен");
                         console.log(response);
+                        return;
                     }
                     var rowData = __assign(__assign({}, data), { hit: response.result, now: response.now, time: response.time });
                     _this.tableManager.addData(rowData);
