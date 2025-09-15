@@ -4,6 +4,7 @@ import DataManager from "./dataManager";
 import ResultTableManager from "./ResultTableManager";
 import SvgManager from "./svgManager";
 
+
 let config: Config = new Config();
 config.set("path", "/calculate?");
 // config.set("path", "/fcgi-bin/app.jar?"); // helios

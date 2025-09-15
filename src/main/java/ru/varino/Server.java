@@ -13,7 +13,7 @@ public class Server {
             Access-Control-Allow-Origin: *
             Connection: keep-alive
             Content-Type: application/json
-            Content-Length: %d
+            
             
             %s
             """;
@@ -36,6 +36,13 @@ public class Server {
         HashMap<String, String> params = parse(FCGIInterface.request.params.getProperty("QUERY_STRING"));
         PointValidator validator = new PointValidator(params);
 
+        String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
+        if (!method.equalsIgnoreCase("POST")) {
+            String errorResponse = createJson("{\"error\": \"unsupported method\"}");
+            System.out.println(errorResponse);
+            return;
+        }
+
         String response;
         if (validator.validate()) {
             long endTime = System.nanoTime();
@@ -50,7 +57,7 @@ public class Server {
     }
 
     private static String createJson(String response) {
-        return String.format(BASE_RESPONSE, response.getBytes(StandardCharsets.UTF_8).length, response);
+        return String.format(BASE_RESPONSE, response);
     }
 
 
