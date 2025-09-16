@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 public class Server {
     private static final String BASE_RESPONSE = """
+            Status: %d %s
             Access-Control-Allow-Origin: *
             Connection: keep-alive
             Content-Type: application/json
@@ -37,8 +38,8 @@ public class Server {
         PointValidator validator = new PointValidator(params);
 
         String method = FCGIInterface.request.params.getProperty("REQUEST_METHOD");
-        if (!method.equalsIgnoreCase("POST")) {
-            String errorResponse = createJson("{\"error\": \"unsupported method\"}");
+        if (!method.equals("POST")) {
+            String errorResponse = createJson("{\"error\": \"unsupported method\"}", 405, "Method Not Allowed");
             System.out.println(errorResponse);
             return;
         }
@@ -48,16 +49,16 @@ public class Server {
             long endTime = System.nanoTime();
             long elapsedTime = (endTime - startTime) / 1000;
             String formattedTimeNow = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(LocalDateTime.now().atZone(ZoneId.of("Europe/Moscow")));
-            response = createJson(String.format("{\"result\": %b, \"time\": %d, \"now\": \"%s\"}", validator.isHit(), elapsedTime, formattedTimeNow));
+            response = createJson(String.format("{\"result\": %b, \"time\": %d, \"now\": \"%s\"}", validator.isHit(), elapsedTime, formattedTimeNow), 200, "OK");
         } else {
-            response = createJson("{\"error\": \" incorrect data\"}");
+            response = createJson("{\"error\": \" incorrect data\"}", 400, "Bad Request");
         }
 
         System.out.println(response);
     }
 
-    private static String createJson(String response) {
-        return String.format(BASE_RESPONSE, response);
+    private static String createJson(String response, int statusCode, String statusMessage) {
+        return String.format(BASE_RESPONSE, statusCode, statusMessage, response);
     }
 
 
